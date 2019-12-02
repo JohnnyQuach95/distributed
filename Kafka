@@ -1,0 +1,86 @@
+How to install Apache Kafka - Step by step.
+
+Apache Kafka is a distributed streaming platform. It iss useful for building real-time streaming data pipelines to get data between the systems or applictions. Another useful feature is real-time streaming applications that can transform streams of data or react on a stream of data. This is tutorial about how to install Apache Kafka on Ubuntu (Ubuntu server-18.04.3) and version of kafka: kafka_2.12-2.3.0
+
+Prepare:
+
+VM VirtualBox (https://www.virtualbox.org/wiki/Downloads)
+Ubuntu-18.04.3-live-server-amd64 (https://ubuntu.com/download/server)
+What will we do?
+
+Step1: Install Java OpenJDK
+Step2: Install Apache Zookeeper
+Step3: Install Apache Kafa
+Step4: Start the server Apache Kafka and Zookeepr
+Step5: Testing
+STEP 1 - Install JAVA OPENJDK:
+
+Because, Kafka has been written in JAVA and Scala we need to install java on ubuntu server. Before installing java, we must update the respository and upgrade all packafes. We can use this commands bellow in ordered:
+
+$sudo apt-get update
+
+$sudo apt-get upgrade
+
+$sudo apt-get dist-upgrade
+
+Now, we can install Java OpenJDk from the Ubuntu respository using the command bellow.
+
+$sudo apt-get install openjdk-8-jdk -y
+
+After the installation finish, check the java verson with command:
+
+$java -version
+
+STEP 2 - Install Apacha Zookeeper
+
+Apache Kafka use Zookeeper for the electing controller, cluster, cluster membership, and topics configuration. Zookeeper is a distributed configuration and synchronization services. We will install Zookeeper from the Ubuntu repository with command bellow.
+
+$sudo apt-get install zookeeperd -y
+
+STEP 3 - Download, install and configure Apache Kafka
+
+We will install the Apache Kafka using the binary files that can be downloaded from the Kafka website. (https://www.apache.org/dyn/closer.cgi?path=/kafka/2.3.0/kafka_2.12-2.3.0.tgz) Use the command:
+
+$wget http://mirror.navercorp.com/apache/kafka/2.3.0/kafka_2.12-2.3.0.tgz
+
+After download, we need uncompress with command:
+
+$sudo tar -xzvf kafka_2.12-2.3.0.tgz
+
+And rename that file to kafka:
+
+$sudo mv ./kafka_2.12-2.3.0 ./kafka
+
+STEP 4 - Strat the server
+
+Kafka uses Zookeeper so we need to first start a Zookeeper server.
+
+$cd kafka
+
+$bin/zookeeper-server-start.sh cofig/zookeeper.properties
+
+Now start the Kafka server:
+
+$bin/kafka-server-start.sh config/server.properties
+
+STEP 5 - Testing
+
+Create a Topic
+
+$bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test
+
+$bin/kafka-topics.sh --list --zookeeper localhost:2181
+
+Changing topic setting #Examole: $bin/kafka-topics.sh --alter --zookeeper kafka-test-001.epicdevs.com:2181 --topic test --partitions 40
+
+Send some message $bin/kafka-console-producer.sh --broker-list loaclhost:9092 --topic test
+
+Test Producer/Consumer:
+
+Start a Producer:
+
+$bi/kafka-console-producer.sh --broker-list localhost:9092 --topic test
+
+Start a Consumer:
+
+$bin/kafka-console-consumer.sh --bootstrap-server loaclhost:9092 --topic test --from-beginning
